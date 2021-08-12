@@ -1,0 +1,157 @@
+<meta charset="UTF-8">
+<link rel="icon" href="data:image/x-icon;base64,">
+<title>Application Title</title>
+<link rel="stylesheet" href="app/styles/app-style.css">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Wellkom | Be Well - Perform Well - Live Well Longer</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="app/styles/newcss.css">
+<link rel="stylesheet" href="app/styles/bootstrap.min.css">
+<link rel="stylesheet" href="app/styles/bootstrap-theme.min.css">
+<link rel="stylesheet" href="app/styles/fontAwesome.css">
+<link rel="stylesheet" href="app/styles/light-box.css">
+<link rel="stylesheet" href="app/styles/owl-carousel.css">
+<link rel="stylesheet" href="app/styles/templatemo-style.css">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="microsoft.cognitiveservices.speech.sdk.bundle.js"></script>
+<script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
+<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<div class="page-content">
+    <section id="projects" class="content-section">
+                <div class="section-heading">
+                    <h1>What is assertion and<br><em>how it can help your personal wellness?</em></h1>
+                </div>
+                <div class="section-content">
+                    <div class="masonry">
+                        <div class="row">
+                            <ul>
+                                <li>Assertion is different from aggressive behaviour, it is about balance</li>
+                                <li>It is related to your right to express your personal feelings, interests and
+objectives in a clear way, whilst acknowledging the rights and feelings of other people, without displaying anger, and without denying the rights of the other person to express their own thoughts and feelings.</li>
+                                <li>Assertiveness is about not being submissive and always giving in to other people.
+Nor is it about being aggressive and dominating other people</li>
+                                <li>Before expressing your own desires and goals, you must recognise what your
+own basic rights are. These legitimate rights include
+    <ol>
+        <li>the right to put your own interests first</li>
+        <li>the right to say no</li>
+        <li>the right to have your own opinion</li>
+        <li>an entitlement to be wrong.</li>
+    </ol>
+</li>
+                                <li>Assertiveness is a social skill that can be learned. Through the practice and
+mastery of the techniques of assertiveness, you can learn to cope more
+effectively with such uncomfortable emotions as
+    <ol>
+        <li>Anger</li>
+        <li>Irritation</li>
+        <li>Social anxiety</li>
+        <li>Depression</li>
+    </ol>
+</li>
+                                <li>As a result, you will be more calm and relaxed when confronting adversity</li>
+                                <li>Some individuals have difficulties in asserting themselves in certain social
+situations or find themselves being ignored and consequently feel frustrated, angry with themselves and, possibly, worthless.</li>
+                                <li>This is often evident in work situations when someone has to deal with difficult
+individuals or finds themselves having to do additional, possibly unpleasant, tasks against their will. </li>
+                                <li>The result can be de-motivating, leading to a loss of job satisfaction as well as an
+increase in stress.</li>
+</br>
+                                <p>List here the specific situations in which you want to be more assertive and
+why <button  style="background-color: transparent;border:none;" id="addibtn2"><i class="fa fa-microphone" aria-hidden="true"></i></button></p>
+                            </ul>
+                        </div>
+                    <div id="addicolumn2" style="display:none">
+    <table  width="100%">
+      <tr>
+        <td><input id="subscriptionKey" type="hidden" type="text" size="40" value="bea8ac191ce041ecbcabc85e062630f5"></td>
+      </tr>
+      <tr>
+        <td><input type="hidden" id="serviceRegion" type="text" size="40" value="westeurope"></td>
+      </tr>
+      
+
+    </table>
+  </div>
+                            <form>
+                              <textarea  id="additxt2" name="text" cols="100" rows="10" class="form-control"></textarea>
+                            </form>
+                    </div>
+                </div>            
+            </section>
+</div>
+<script>
+
+    // status fields and start button in UI
+
+    var additxt2;
+
+    var addibtn2;
+
+    // subscription key and region for speech services.
+    var subscriptionKey, serviceRegion, languageTargetOptions, languageSourceOptions;
+    var SpeechSDK;
+    var recognizerone;
+
+
+      addibtn2 = document.getElementById("addibtn2");
+      subscriptionKey = document.getElementById("subscriptionKey");
+      serviceRegion = document.getElementById("serviceRegion");
+
+
+      additxt2 = document.getElementById("additxt2");
+      addibtn2.addEventListener("click", function () {
+        addibtn2.disabled = true;
+        addibtn2.style.color="red";
+        additxt2.innerHTML = "";
+
+        if (subscriptionKey.value === "" || subscriptionKey.value === "subscription") {
+          alert("Please enter your Microsoft Cognitive Services Speech subscription key!");
+          addibtn2.disabled = false;
+          return;
+        }
+        var speechConfig = SpeechSDK.SpeechTranslationConfig.fromSubscription(subscriptionKey.value, serviceRegion.value);
+
+        speechConfig.speechRecognitionLanguage = "en-US";
+        let language = "en"
+        speechConfig.addTargetLanguage(language)
+
+        var audioConfig  = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+        recognizerone = new SpeechSDK.TranslationRecognizer(speechConfig, audioConfig);
+
+        recognizerone.recognizeOnceAsync(
+          function (result) {
+            addibtn2.disabled = false;
+            addibtn2.style.color="black";
+            let translation = result.translations.get(language);
+            window.console.log(translation);
+            additxt2.innerHTML += translation;
+
+            recognizerone.close();
+            recognizerone = undefined;
+          },
+          function (err) {
+            addibtn2.disabled = false;
+            addibtn2.style.color="black";
+            additxt2.innerHTML += err;
+            window.console.log(err);
+
+            recognizerone.close();
+            recognizerone = undefined;
+          });
+      });
+
+      if (!!window.SpeechSDK) {
+        SpeechSDK = window.SpeechSDK;
+        addibtn2.disabled=false;
+        addibtn2.style.color="black";
+        document.getElementById('addicolumn2').style.display = 'block';
+        document.getElementById('warning').style.display = 'none';
+      }
+
+  </script>
